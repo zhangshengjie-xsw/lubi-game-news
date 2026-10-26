@@ -39,6 +39,7 @@ class GameNewsCommand(BaseCommand):
         count = ctx.get_config("news.count", 3)
         max_age = ctx.get_config("news.max_age_hours", 48)
         cache_minutes = ctx.get_config("news.cache_minutes", 15)
+        include_summary = ctx.get_config("news.include_summary", True)
         try:
             items, cached, fetched_at = await self.service.get(
                 count=count,
@@ -54,11 +55,14 @@ class GameNewsCommand(BaseCommand):
                     "context": "游戏新闻资料获取失败。本次没有可核实的实时资料，请明确告知暂时无法播报，不要编造新闻。",
                 },
             )
+        items = [dict(item, summary=item["summary"] if include_summary else "") for item in items]
         ctx.display.add_fields(
             {
                 "状态": "读取缓存" if cached else "获取成功",
                 "获取时间": fetched_at,
                 "新闻条数": len(items),
+                "插件版本": "0.1.3",
+                "包含摘要": include_summary,
                 "新闻来源": items,
             }
         )

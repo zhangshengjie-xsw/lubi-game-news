@@ -1,6 +1,12 @@
-# 露比游戏新闻台 v0.1.2
+# 露比游戏新闻台 v0.1.3
 
 本版本修复 RSS XML 解析防护，用于露比插件市场正式审核与安装联调。
+
+## v0.1.3 更新内容
+
+- 新增 news.include_summary，默认 true，控制是否向回复模型和来源展示提供 RSS 摘要。关闭后仅提供标题、日期、来源及链接。
+- 调用详情增加“插件版本”和“包含摘要”，便于确认更新生效。
+- 保留 count、max_age_hours、cache_minutes 的名称及默认值，供验证升级后用户配置保留。
 
 ## v0.1.2 更新内容
 
@@ -40,6 +46,7 @@ GitHub 已批准的 v0.1.0 保持原样；本次将使用新版本发布，不�
 count = 3
 max_age_hours = 48
 cache_minutes = 15
+include_summary = true
 ```
 
 count 为 1—3，max_age_hours 为 1—168，cache_minutes 为 1—60。默认取最近 48 小时资讯，

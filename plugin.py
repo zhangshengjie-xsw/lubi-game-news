@@ -9,7 +9,7 @@ from .commands import GameNewsCommand
 
 class GameNewsPlugin(BasePlugin):
     config_file_name = "config.toml"
-    config_schema = {"news": {"count": 3, "max_age_hours": 48, "cache_minutes": 15}}
+    config_schema = {"news": {"count": 3, "max_age_hours": 48, "cache_minutes": 15, "include_summary": True}}
     component_display_titles = {"news": "游戏新闻台"}
     component_display_tables = {
         "news": {
@@ -26,6 +26,8 @@ class GameNewsPlugin(BasePlugin):
     @staticmethod
     def validate_config(config):
         section = config.get("news", {})
+        if type(section.get("include_summary", True)) is not bool:
+            raise ValueError("news.include_summary 必须是布尔值")
         for key, low, high in (("count", 1, 3), ("max_age_hours", 1, 168), ("cache_minutes", 1, 60)):
             value = section.get(key, {"count": 3, "max_age_hours": 48, "cache_minutes": 15}[key])
             if type(value) is not int or not low <= value <= high:
