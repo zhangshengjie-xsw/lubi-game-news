@@ -16,14 +16,20 @@ MAX_BYTES = 1_500_000
 BEIJING = timezone(timedelta(hours=8))
 
 
+class _RssTreeBuilder(ET.TreeBuilder):
+    def doctype(self, name, pubid, system):
+        # 在解析器识别出声明时拒绝 DTD，与输入编码无关，也禁止自定义实体声明。
+        raise ValueError("RSS 不允许 DTD 或自定义实体声明")
+
+
 def plain(value, limit):
     return re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]*>", " ", value or ""))).strip()[:limit]
 
 
 def parse_feed(body, *, source, domain, now, max_age_hours):
-    if len(body) > MAX_BYTES or b"<!DOCTYPE" in body.upper() or b"<!ENTITY" in body.upper():
-        raise ValueError("RSS 过大或含不支持的 XML 声明")
-    root = ET.fromstring(body)
+    if len(body) > MAX_BYTES:
+        raise ValueError("RSS 超出大小限制")
+    root = ET.fromstring(body, parser=ET.XMLParser(target=_RssTreeBuilder()))
     articles = []
     seen = set()
     for item in root.findall("./channel/item")[:100]:

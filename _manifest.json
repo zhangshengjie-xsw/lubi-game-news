@@ -1,6 +1,6 @@
 {
   "name": "game_news",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "露比游戏新闻台：按请求获取游戏资讯，供露比讲述并展示原文来源",
   "category": "information",
   "tags": ["游戏", "新闻", "command", "hook"],
